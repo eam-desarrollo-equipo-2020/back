@@ -9,7 +9,7 @@ module.exports = () => {
     process.on('SIGINT', () => {
         mongoose.connection.close(() => {
             console.log(`Mongo id disconnected`);
-            proccess.exit(0);
+            process.exit(0);
         });
     });
 }
