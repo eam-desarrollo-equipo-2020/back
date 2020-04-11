@@ -15,6 +15,10 @@ const sessionSchema = new Schema({
 		type: Number,
 		required: true
 	},
+	state: {
+		type: Boolean,
+		required: true
+	}
 }, {
 	versionKey: false,
 	timestamps: true
