@@ -108,6 +108,27 @@ exports.logoutUser = async (req, res) => {
 	}
 };
 
-exports.verifySession = (req, res) => {
+exports.verifySession = async (req, res) => {
+	const { token } = req.headers;
+	const session = await Session.findOne({ access_token : token });
 	
+	if (session) {
+		const state = session.state;
+		let currentDate = new Date();
+		let expiresIn = session.expires_in;
+		currentDate = (currentDate / 1000).toFixed(0);
+		
+		if(currentDate < expiresIn && state !== false){
+			expiresIn = new Date();
+			expiresIn.setMinutes(expiresIn.getMinutes() + 10);
+			expiresIn = (expiresIn / 1000).toFixed(0);
+			session.updateOne({ expires_in: expiresIn });
+			res.status(200).json({ msg: 'the token is active' });
+		} else {
+			await session.updateOne({ state: false });
+			res.status(401).json({ msg: 'the token has expired' });
+		}
+	} else {
+		res.status(401).json({ msg: 'invalid token' });
+	}
 };
