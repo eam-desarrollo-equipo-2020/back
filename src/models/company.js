@@ -14,10 +14,11 @@ const CompanySchema = new Schema({
     type: String,
      required: false
     },
-  departamento: {
+  departament: {
     type: String,
      required: true
     },
+
   objeto_social: {
     type: String,
      required: false
