@@ -8,7 +8,7 @@ exports.createUser = (req, res, next) => {
 	const newUser = {
 		email: req.body.email,
 		pwd: bcrypt.hashSync(req.body.pwd) //encriptamos la pwd
-	};
+	}
 
 	User.create(newUser, (err, user) => {
 		//console.log('el error es', err) asi sabemos el codigo del error lo imprimira en consola
@@ -29,7 +29,7 @@ exports.createUser = (req, res, next) => {
 			email: user.email,
 			accessToken: accessToken,
 			expiresIn: expiresIn
-		};
+		}
 
 		// Se guarda la sesion..
 		const newSession = {
@@ -37,7 +37,7 @@ exports.createUser = (req, res, next) => {
 			access_token: accessToken,
 			expires_in: expiresIn,
 			state: true
-		};
+		}
 
 		// Cuando de crea la sesion, se retonan los datos..
 		Session.create(newSession, (err, session) => {
