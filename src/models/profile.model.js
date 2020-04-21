@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+//var Users = mongoose.model('src/dao/auth.dao');
 mongoose.set('useCreateIndex', true);
 
 const profileSchema = new Schema({
@@ -8,7 +9,7 @@ const profileSchema = new Schema({
 		required: true,
 		trim: true
 	},
-	id: {
+	id_card: {
 		type: Number,
 		required: true,
 		trim: true,
@@ -29,8 +30,15 @@ const profileSchema = new Schema({
 		type: Date,
 		required: true,
 	},
-	
-},{
+	// user_info: { 
+	// 	type: Schema.ObjectId, 
+	// 	ref: Users 
+	// }
+	id: {
+		type: String,
+		required: true,
+	}
+}, {
 	versionKey: false,
 	timestamps: true //guardar la fecha de actualizacion y de guardado
 });
