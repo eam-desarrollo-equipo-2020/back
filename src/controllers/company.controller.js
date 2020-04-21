@@ -1,16 +1,26 @@
-const Company = require('../dao/company.dao');
 
-exports.createCompany = (req,res, next) => {
-  const newCompany = {
-    razon_social: req.body.razon_social,
-    representante_legal: req.body.representante_legal,
-    ciudad: req.body.ciudad,
-    departamento: req.body.departamento,
-    objeto_social: req.body.objeto_social
-  };
+var Company = require('../dao/company.dao');
 
-  Company.create(newCompany, (err, comp) => {
+var controller = {
+  createCompany: function (req, res)  {
     
-  });
+    var company = new Company();
+    company.id_company  = req.body.id_company;
+    company.razon_social  = req.body.razon_social;
+    company.representante_legal  = req.body.representante_legal;
+    company.ciudad  = req.body.ciudad;
+    company.departamento  = req.body.departamento;
+    company.objeto_social  = req.body.objeto_social;
+    
 
+    company.save((err, doc) => {
+      if (!err) {
+        console.log(res);
+      }else {
+        console.log('Error during record insertion : ' + err);
+      }
+    });
+
+  }
 };
+module.exports = controller;

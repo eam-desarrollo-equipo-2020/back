@@ -1,7 +1,13 @@
-const mongoose = require('morgan');
-const {Schema} = mongoose;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+mongoose.set('useCreateIndex', true);
 
 const CompanySchema = new Schema({
+  id_company:{
+    type: String,
+    required: true
+  },
   razon_social: {
     type: String,
      required: true
@@ -24,4 +30,4 @@ const CompanySchema = new Schema({
     }
 });
 
-module.exports = mongoose.model("company", CompanySchema);
+module.exports = companySchema;
