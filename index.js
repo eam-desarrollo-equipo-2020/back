@@ -2,6 +2,7 @@
 const cors = require('cors');
 const authRoutes = require('./src/routes/auth.routes');
 const profileRoutes = require('./src/routes/profile.routes');
+const prodCatRoutes = require('./src/routes/product_category.routes');
 const express = require('express');
 const properties = require('./config/properties');
 const morgan = require('morgan');
@@ -19,6 +20,7 @@ app.use(express.json());
 
 authRoutes(router);
 profileRoutes(router);
+prodCatRoutes(router);
 
 // Middlewares..
 app.use(cors());
