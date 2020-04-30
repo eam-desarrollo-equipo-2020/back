@@ -3,7 +3,6 @@ var Company = require('../dao/company.dao');
 
 var controller = {
   createCompany: function (req, res) {
-
     var company = new Company();
     company.id_company = req.body.id_company;
     company.razon_social = req.body.razon_social;
