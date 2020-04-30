@@ -5,7 +5,6 @@ const USER = require('../dao/session.dao.js');
 var controller = {
 
     createProfile: function (req, res) {
-        console.log(req);
         var profile = new Profile();
         var params = req.body;
         profile.name = params.name;
@@ -31,7 +30,7 @@ var controller = {
                 } else {
                     res.status(409).json({
                         message: 'The token has expired'
-                    })
+                    });
                 }
             });
     },
