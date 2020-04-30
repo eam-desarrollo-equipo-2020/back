@@ -19,10 +19,10 @@ var controller = {
                     profile.id = session.id_user
                     profile.save((err, profileStored) => {
                         if (err) return res.status(500).json({
-                            message: 'Error al guardar perfil'
+                            message: 'Error saving profile'
                         });
                         if (!profileStored) return res.status(400).json({
-                            message: 'No se ha podido guardar el perfil'
+                            message: 'Could not save profile'
                         });
                         return res.status(200).json({
                             profile: profileStored
