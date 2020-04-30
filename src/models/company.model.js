@@ -3,11 +3,7 @@ const Schema = mongoose.Schema;
 
 mongoose.set('useCreateIndex', true);
 
-const CompanySchema = new Schema({
-  id_company:{
-    type: String,
-    required: true
-  },
+const companySchema = new Schema({
   razon_social: {
     type: String,
      required: true
