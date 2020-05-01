@@ -7,6 +7,7 @@ const prodCatRoutes = require('./src/routes/product_category.routes');
 const companyRoutes = require('./src/routes/company.routes');
 const productRoutes = require('./src/routes/product.routes');
 const orderRoutes = require('./src/routes/order.routes');
+const customerRoutes = require('./src/routes/customer.routes');
 const express = require('express');
 const properties = require('./config/properties');
 const morgan = require('morgan');
@@ -29,6 +30,7 @@ prodCatRoutes(router);
 companyRoutes(router);
 productRoutes(router);
 orderRoutes(router);
+customerRoutes(router);
 
 // Middlewares..
 app.use(cors());
@@ -42,4 +44,3 @@ router.get('/', (req, res) => {
 
 app.use(router);
 app.listen(properties.PORT, () => console.log(`Server running on port ${properties.PORT}`));
-
