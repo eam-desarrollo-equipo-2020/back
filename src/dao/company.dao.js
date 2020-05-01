@@ -7,3 +7,5 @@ companySchema.statics = {
     company.save(cb);
   }
 };
+const companySchemaModel = mongoose.model('Company', companySchema);
+module.exports = companySchemaModel;
