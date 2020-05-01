@@ -1,6 +1,6 @@
 
 var Order = require('../dao/order.dao');
-
+const USER = require('../dao/session.dao.js');
 var controller = {
   createOrder: function (req, res) {
 
