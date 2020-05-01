@@ -5,6 +5,8 @@ const profileRoutes = require('./src/routes/profile.routes');
 const user_typeRoutes = require('./src/routes/user_types.routes');
 const prodCatRoutes = require('./src/routes/product_category.routes');
 const companyRoutes = require('./src/routes/company.routes');
+const productRoutes = require('./src/routes/product.routes');
+const orderRoutes = require('./src/routes/order.routes');
 const express = require('express');
 const properties = require('./config/properties');
 const morgan = require('morgan');
@@ -25,7 +27,8 @@ profileRoutes(router);
 user_typeRoutes(router);
 prodCatRoutes(router);
 companyRoutes(router);
-
+productRoutes(router);
+orderRoutes(router);
 
 // Middlewares..
 app.use(cors());
