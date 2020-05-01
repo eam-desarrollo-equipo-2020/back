@@ -1,6 +1,6 @@
 
 var Company = require('../dao/company.dao');
-
+const USER = require('../dao/session.dao.js');
 var controller = {
   createCompany: function (req, res) {
 
