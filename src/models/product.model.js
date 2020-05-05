@@ -20,14 +20,9 @@ const productSchema = new Schema({
     type: String,
      required: true
     },
-  quantity: {
-    type: Number,
-     required: false
-    },
   category: {
-    type: Schema.Types.ObjectId,
-    ref: 'Product Category',
-    required: [true, 'Debe existir una referencia a una categoria']
+    type: String,
+    required: true
   }
 }, {
 	versionKey: false,
