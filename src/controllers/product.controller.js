@@ -1,5 +1,6 @@
 
 var Product = require('../dao/product.dao');
+const USER = require('../dao/session.dao.js');
 
 var controller = {
   createProduct: function (req, res) {
