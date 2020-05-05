@@ -3,7 +3,6 @@ var Company = require('../dao/company.dao');
 const USER = require('../dao/session.dao.js');
 var controller = {
   createCompany: function (req, res) {
-
     var company = new Company();
     company.razon_social = req.body.razon_social;
     company.representante_legal = req.body.representante_legal;
