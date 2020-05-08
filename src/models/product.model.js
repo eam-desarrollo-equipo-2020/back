@@ -4,34 +4,29 @@ const Schema = mongoose.Schema;
 mongoose.set('useCreateIndex', true);
 
 const productSchema = new Schema({
-  name: {
-    type: String,
-     required: true
+    name: {
+        type: String,
+        required: true
     },
-  detail: {
-    type: String,
-     required: true
+    detail: {
+        type: String,
+        required: true
     },
-  price: {
-    type: Number,
-     required: false
+    price: {
+        type: Number,
+        required: false
     },
-  lot: {
-    type: String,
-     required: true
+    lot: {
+        type: String,
+        required: true
     },
-  quantity: {
-    type: Number,
-     required: false
-    },
-  category: {
-    type: Schema.Types.ObjectId,
-    ref: 'Product Category',
-    required: [true, 'Debe existir una referencia a una categoria']
-  }
+    category: {
+        type: String,
+        required: true
+    }
 }, {
-	versionKey: false,
-	timestamps: true //guardar la fecha de actualizacion y de guardado
+    versionKey: false,
+    timestamps: true //guardar la fecha de actualizacion y de guardado
 });
 
 module.exports = productSchema;
