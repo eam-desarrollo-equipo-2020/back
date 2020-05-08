@@ -45,5 +45,29 @@ var controller = {
       });
     });
   },
+
+  findCompany: async (req, res) => {
+    const token = req.headers.token;
+    const session = await USER.findOne({ access_token: token });
+
+    if (session && session.state === true) {
+      const id_company = req.params.id;
+      if (!id_company) res.status(409).json({ msg: 'id is not defined' });
+      
+      const company = await Company.findById(id_company);
+      
+      if (company) {
+        res.status(200).json(company);
+      } else {
+        res.status(404).json({ msg: 'this company does not exist' });
+      }
+
+    } else {
+      res.status(403).json({
+        msg: 'access denied',
+        causes: 'Token does not exist or has expired'
+      });
+    }
+  }
 };
 module.exports = controller;
