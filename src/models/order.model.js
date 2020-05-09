@@ -5,10 +5,9 @@ mongoose.set('useCreateIndex', true);
 
 const orderSchema = new Schema({
   client: {
-    type: Schema.Types.ObjectId,
-    ref: 'Profile',
-    required: [true, 'Debe existir una referencia a un perfil de usuario']
-    },
+    type: String,
+    required: true
+  },
   detail: {
     type: String,
      required: true

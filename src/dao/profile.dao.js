@@ -6,7 +6,10 @@ profileSchema.statics = {
 		const profile = new this(data);
 		profile.save(cb);
 	}
-}
+
+	
+	
+};
 
 const profileModel = mongoose.model('Profile', profileSchema);
 module.exports = profileModel;
