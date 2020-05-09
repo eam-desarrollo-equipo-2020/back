@@ -34,5 +34,21 @@ var controller = {
                 }
             });
     },
-  };
+  
+
+  listClients: function (req, res) {
+    Profile.find({}).sort('id_card').exec((err, companies) => {
+      if (err) return res.status(500).json({
+        message: 'Error loading data'
+      });
+      if (!companies) return res.status(404).json({
+        message: 'There are no companies to show'
+      });
+      return res.status(200).json({
+        companies
+      });
+    });
+  }
+
+};
   module.exports = controller;
