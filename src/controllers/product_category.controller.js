@@ -5,6 +5,11 @@ exports.create = async (req, res) => {
 	const token = req.headers.token;
 	const { name, description } = req.body;
 
+	if (token === undefined || name === undefined || description === undefined)
+		return res.status(409).json({ msg: 'fields are missing' });
+	if (token === '' || name === '' || description === '')
+		return res.status(409).json({ msg: 'some fields are empty' });
+
 	const session = await Session.findOne({ access_token: token });
 
 	if (session && session.state === true) {
