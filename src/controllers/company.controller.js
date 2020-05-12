@@ -59,11 +59,12 @@ var controller = {
 
   findCompany: async (req, res) => {
     const token = req.headers.token;
+    if (token === undefined) return res.status(409).json({ msg: 'fields are missing' });
+	  if (token === '') return res.status(409).json({ msg: 'some fields are empty' });
     const session = await USER.findOne({ access_token: token });
 
     if (session && session.state === true) {
       const id_company = req.params.id;
-      if (!id_company) res.status(409).json({ msg: 'id is not defined' });
       
       const company = await Company.findById(id_company);
       
