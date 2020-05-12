@@ -3,13 +3,24 @@ var Company = require('../dao/company.dao');
 const USER = require('../dao/session.dao.js');
 var controller = {
   createCompany: function (req, res) {
+    const { razon_social, representante_legal, ciudad, departamento, objeto_social } = req.body;
+    const token = req.headers.token;
+
+    if( razon_social === undefined || representante_legal === undefined
+      || ciudad === undefined || departamento === undefined || objeto_social === undefined
+      || token === undefined) return res.status(409).json({ msg: 'fields are missing' });
+    
+    if (razon_social === '' || representante_legal === '' || ciudad === '' || departamento === ''
+      || objeto_social === '' || token === '')
+      return res.status(409).json({ msg: 'some fields are empty' });
+
     var company = new Company();
-    company.razon_social = req.body.razon_social;
-    company.representante_legal = req.body.representante_legal;
-    company.ciudad = req.body.ciudad;
-    company.departamento = req.body.departamento;
-    company.objeto_social = req.body.objeto_social;
-    USER.findOne({access_token: req.headers.token})
+    company.razon_social = razon_social;
+    company.representante_legal = representante_legal;
+    company.ciudad = ciudad;
+    company.departamento = departamento;
+    company.objeto_social = objeto_social;
+    USER.findOne({access_token: token})
             .then(session => {
                 if(session.state){
                     company.id = session.id_user
@@ -48,11 +59,12 @@ var controller = {
 
   findCompany: async (req, res) => {
     const token = req.headers.token;
+    if (token === undefined) return res.status(409).json({ msg: 'fields are missing' });
+	  if (token === '') return res.status(409).json({ msg: 'some fields are empty' });
     const session = await USER.findOne({ access_token: token });
 
     if (session && session.state === true) {
       const id_company = req.params.id;
-      if (!id_company) res.status(409).json({ msg: 'id is not defined' });
       
       const company = await Company.findById(id_company);
       

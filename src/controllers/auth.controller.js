@@ -4,10 +4,14 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const SECRET_KEY = 'secretkey123456';
 
-exports.createUser = (req, res, next) => {
+exports.createUser = (req, res) => {
+	const { email, pwd } = req.body;
+	if (email === undefined || pwd === undefined) return res.status(409).json({ msg: 'fields are missing' });
+	if (email === '' || pwd === '') return res.status(409).json({ msg: 'some fields are empty' });
+
 	const newUser = {
-		email: req.body.email,
-		pwd: bcrypt.hashSync(req.body.pwd) //encriptamos la pwd
+		email: email,
+		pwd: bcrypt.hashSync(pwd) //encriptamos la pwd
 	}
 
 	User.create(newUser, (err, user) => {
@@ -48,9 +52,14 @@ exports.createUser = (req, res, next) => {
 };
 
 exports.loginUser = (req, res, next) => {
+
+	const { email, pwd } = req.body;
+	if (email === undefined || pwd === undefined) return res.status(409).json({ msg: 'fields are missing' });
+	if (email === '' || pwd === '') return res.status(409).json({ msg: 'some fields are empty' });
+
 	const userData = {
-		email: req.body.email,
-		pwd: req.body.pwd
+		email: email,
+		pwd: pwd
 	}
 
 	User.findOne({ email: userData.email }, (err, user) => {
@@ -98,6 +107,8 @@ exports.loginUser = (req, res, next) => {
 
 exports.logoutUser = async (req, res) => {
 	const { token } = req.headers;
+	if (token === undefined) return res.status(409).json({ msg: 'fields are missing' });
+	if (token === '') return res.status(409).json({ msg: 'some fields are empty' });
 	const session = await Session.findOne({ access_token : token });
 
 	if (session && session.state !== false) {
@@ -110,6 +121,8 @@ exports.logoutUser = async (req, res) => {
 
 exports.verifySession = async (req, res) => {
 	const { token } = req.headers;
+	if (token === undefined) return res.status(409).json({ msg: 'fields are missing' });
+	if (token === '') return res.status(409).json({ msg: 'some fields are empty' });
 	const session = await Session.findOne({ access_token : token });
 	
 	if (session) {
