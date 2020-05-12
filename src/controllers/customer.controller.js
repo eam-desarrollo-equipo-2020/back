@@ -5,6 +5,11 @@ exports.createCustomer = async(req, res) => {
     const token = req.headers.token;
     const { id_card, name, company } = req.body;
 
+    if (token === undefined || id_card === undefined || name === undefined || company === undefined)
+        return res.status(409).json({ msg: 'fields are missing' });
+    if (token === '' || id_card === '' || name === '' || company === '')
+        return res.status(409).json({ msg: 'some fields are empty' });
+
     const session = await Session.findOne({ access_token: token });
 
     if (session && session.state === true) {
