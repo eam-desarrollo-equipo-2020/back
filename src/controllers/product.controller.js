@@ -5,14 +5,25 @@ const USER = require('../dao/session.dao.js');
 var controller = {
   createProduct: function (req, res) {
 
+    const { name, detail, price, lot, quantity, category } = req.body;
+    const token = req.headers.token;
+
+    if(name === undefined || detail === undefined || price === undefined || lot === undefined
+      || quantity === undefined || category === undefined || token === undefined)
+      return res.status(409).json({ msg: 'fields are missing' });
+      
+    if (name === '' || detail === '' || price === '' || lot === '' || quantity === ''
+      || category === '' || token === '') 
+      return res.status(409).json({ msg: 'some fields are empty' });
+
     var product = new Product();
-    product.name = req.body.name;
-    product.detail = req.body.detail;
-    product.price = req.body.price;
-    product.lot = req.body.lot;
-    product.quantity = req.body.quantity;
-    product.category = req.body.category;
-    USER.findOne({ access_token: req.headers.token })
+    product.name = name;
+    product.detail = detail;
+    product.price = price;
+    product.lot = lot;
+    product.quantity = quantity;
+    product.category = category;
+    USER.findOne({ access_token: token })
       .then(session => {
         if (session.state) {
           product.id = session.id_user
