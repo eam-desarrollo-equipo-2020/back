@@ -1,6 +1,7 @@
 
 var Product = require('../dao/product.dao');
 const USER = require('../dao/session.dao.js');
+const categoryProduct = require('../dao/product_category.dao');
 
 var controller = {
   createProduct: function (req, res) {
@@ -8,12 +9,12 @@ var controller = {
     const { name, detail, price, lot, quantity, category } = req.body;
     const token = req.headers.token;
 
-    if(name === undefined || detail === undefined || price === undefined || lot === undefined
+    if (name === undefined || detail === undefined || price === undefined || lot === undefined
       || quantity === undefined || category === undefined || token === undefined)
       return res.status(409).json({ msg: 'fields are missing' });
-      
+
     if (name === '' || detail === '' || price === '' || lot === '' || quantity === ''
-      || category === '' || token === '') 
+      || category === '' || token === '')
       return res.status(409).json({ msg: 'some fields are empty' });
 
     var product = new Product();
@@ -45,6 +46,66 @@ var controller = {
         }
       });
   },
+
+  findProductByName: async (req, res) => {
+    const token = req.headers.token;
+    if (token === undefined) return res.status(409).json({ msg: 'fields are missing' });
+    if (token === '') return res.status(409).json({ msg: 'some fields are empty' });
+    const session = await USER.findOne({ access_token: token });
+
+    if (session && session.state === true) {
+      const name_product = req.params.name;
+
+      const product = await Product.find({ "name": { '$regex': name_product } });
+
+      if (product) {
+        res.status(200).json(product);
+      } else {
+        res.status(404).json({ msg: 'Not exist almost a product with this expression' });
+      }
+
+    } else {
+      res.status(403).json({
+        msg: 'access denied',
+        causes: 'Token does not exist or has expired'
+      });
+    }
+  },
+
+  findCategoryByProduct: async (req, res) => {
+    const token = req.headers.token;
+    if (token === undefined) return res.status(409).json({ msg: 'fields are missing' });
+    if (token === '') return res.status(409).json({ msg: 'some fields are empty' });
+    const session = await USER.findOne({ access_token: token });
+
+    if (session && session.state === true) {
+      const id_product = req.params.idProduct;
+      if (!id_product.match(/^[0-9a-fA-F]{24}$/)) {
+        res.status(403).json({
+          msg: 'bad request',
+          causes: 'The id_product not is a valid ObjectId'
+        });
+      }
+      const product = await Product.find({ _id: id_product }, { category: 1, _id: 0 });
+      if (typeof product[0] !== 'undefined') {
+        const category = product[0].category;
+        const cat = await categoryProduct.find({ name: category }, { name: 1, description: 1 })
+        if (typeof cat[0] !== 'undefined') {
+          res.status(200).json(cat);
+        } else {
+          res.status(404).json({ msg: 'Not exist a category for the product with this ID' });
+        }
+      } else {
+        res.status(404).json({ msg: 'Not exist a product with this ID' });
+      }
+
+    } else {
+      res.status(403).json({
+        msg: 'access denied',
+        causes: 'Token does not exist or has expired'
+      });
+    }
+  }
 
   // listCompanies: function (req, res) {
   //   product.find({}).sort('-razon_social').exec((err, companies) => {
