@@ -9,7 +9,7 @@ var controller = {
     const token = req.headers.token;
 
     if(name === undefined || detail === undefined || price === undefined || lot === undefined
-      || quantity === undefined || category === undefined || token === undefined)
+      || category === undefined || token === undefined)
       return res.status(409).json({ msg: 'fields are missing' });
       
     if (name === '' || detail === '' || price === '' || lot === '' || quantity === ''
@@ -46,18 +46,21 @@ var controller = {
       });
   },
 
-  // listCompanies: function (req, res) {
-  //   product.find({}).sort('-razon_social').exec((err, companies) => {
-  //     if (err) return res.status(500).json({
-  //       message: 'Error loading data'
-  //     });
-  //     if (!companies) return res.status(404).json({
-  //       message: 'There are no companies to show'
-  //     });
-  //     return res.status(200).json({
-  //       companies
-  //     });
-  //   });
-  // },
+  listProducts: function (req, res) {
+    Product.find({}).exec((err, products) => {
+      if (err) return res.status(500).json({
+        message: 'Error loading data'
+      });
+      if (!products) return res.status(404).json({
+        message: 'There are no products to show'
+      });
+      return res.status(200).json({
+        products
+      });
+    });
+  }
+
+
+  
 };
 module.exports = controller;
