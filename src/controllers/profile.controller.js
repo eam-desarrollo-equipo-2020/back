@@ -136,6 +136,55 @@ var controller = {
         });
       }
     }
+  },
+
+  profileOfUser: async (req, res) => {
+    const token = req.headers.token;
+    if (token === undefined) return res.status(409).json({ msg: 'fields are missing' });
+	  if (token === '') return res.status(409).json({ msg: 'some fields are empty' });
+    const session = await USER.findOne({ access_token: token });
+
+    if (session && session.state === true) {
+      const id_search = session.id_user;
+      
+      const profile = await Profile.find({"id" : id_search});
+      
+      if (profile) {
+        res.status(200).json(profile);
+      } else {
+        res.status(404).json({ msg: 'The user in session dont have a profile' });
+      }
+
+    } else {
+      res.status(403).json({
+        msg: 'access denied',
+        causes: 'Token does not exist or has expired'
+      });
+    }
   }
+
+/*   profileOfUser: function (req, res) {
+    var { token } = req.headers;
+
+    USER.findOne({access_token: token})
+        .then(session => {
+            if(session.state){
+              
+                const profile = Profile.find({"id" : session.id_user});
+
+                if (profile) {
+                  res.status(200).json(profile);
+                } else {
+                  res.status(404).json({ msg: 'The user in session dont have a profile' });
+                }
+   
+            } else {
+                res.status(409).json({
+                    message: 'The token has expired'
+                });
+            }
+        });
+} */
+
 };
 module.exports = controller;

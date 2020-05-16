@@ -80,6 +80,32 @@ var controller = {
         causes: 'Token does not exist or has expired'
       });
     }
+  },
+
+  findCompanyByName: async (req, res) => {
+    const token = req.headers.token;
+    if (token === undefined) return res.status(409).json({ msg: 'fields are missing' });
+	  if (token === '') return res.status(409).json({ msg: 'some fields are empty' });
+    const session = await USER.findOne({ access_token: token });
+
+    if (session && session.state === true) {
+      const name_company = req.params.name;
+      
+      
+      const company = await Company.find({"razon_social" : {'$regex': name_company}});
+      
+      if (company) {
+        res.status(200).json(company);
+      } else {
+        res.status(404).json({ msg: 'Not exist almost a company with this expression' });
+      }
+
+    } else {
+      res.status(403).json({
+        msg: 'access denied',
+        causes: 'Token does not exist or has expired'
+      });
+    }
   }
 };
 module.exports = controller;
