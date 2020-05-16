@@ -30,10 +30,6 @@ const profileSchema = new Schema({
 		type: Date,
 		required: true,
 	},
-	// user_info: { 
-	// 	type: Schema.ObjectId, 
-	// 	ref: Users 
-	// }
 	id: {
 		type: String,
 		required: true,

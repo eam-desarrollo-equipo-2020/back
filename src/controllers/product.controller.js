@@ -47,6 +47,33 @@ var controller = {
       });
   },
 
+  listProduct: function (req, res) {
+    const token = req.headers.token;
+    const { value } = req.body;
+    if (token === undefined  || value === undefined) return res.status(409).json({ msg: 'fields are missing' });
+    if (token === ''  || value === '') return res.status(409).json({ msg: 'some fields are empty' });
+
+    USER.findOne({ access_token: token })
+      .then(session => {
+        if (session.state) {
+          Product.findOne({ _id: value}, { _id: 0}).exec((err, products) => {
+            if (err) return res.status(500).json({
+              message: 'Error loading data'
+            });
+            if (!products || products === null) return res.status(404).json({
+              message: 'There are no products to show'
+            });
+            return res.status(200).json({
+              products
+            });
+          });
+        } else {
+          res.status(409).json({
+            message: 'The token has expired'
+          });
+        }
+      });
+  },
   findProductByName: async (req, res) => {
     const token = req.headers.token;
     if (token === undefined) return res.status(409).json({ msg: 'fields are missing' });
@@ -121,4 +148,5 @@ var controller = {
   //   });
   // },
 };
+
 module.exports = controller;
