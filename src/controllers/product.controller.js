@@ -8,12 +8,12 @@ var controller = {
     const { name, detail, price, lot, quantity, category } = req.body;
     const token = req.headers.token;
 
-    if(name === undefined || detail === undefined || price === undefined || lot === undefined
+    if (name === undefined || detail === undefined || price === undefined || lot === undefined
       || quantity === undefined || category === undefined || token === undefined)
       return res.status(409).json({ msg: 'fields are missing' });
-      
+
     if (name === '' || detail === '' || price === '' || lot === '' || quantity === ''
-      || category === '' || token === '') 
+      || category === '' || token === '')
       return res.status(409).json({ msg: 'some fields are empty' });
 
     var product = new Product();
@@ -46,18 +46,33 @@ var controller = {
       });
   },
 
-  // listCompanies: function (req, res) {
-  //   product.find({}).sort('-razon_social').exec((err, companies) => {
-  //     if (err) return res.status(500).json({
-  //       message: 'Error loading data'
-  //     });
-  //     if (!companies) return res.status(404).json({
-  //       message: 'There are no companies to show'
-  //     });
-  //     return res.status(200).json({
-  //       companies
-  //     });
-  //   });
-  // },
+  listProduct: function (req, res) {
+    const token = req.headers.token;
+    const { value } = req.body;
+    if (token === undefined  || value === undefined) return res.status(409).json({ msg: 'fields are missing' });
+    if (token === ''  || value === '') return res.status(409).json({ msg: 'some fields are empty' });
+
+    USER.findOne({ access_token: token })
+      .then(session => {
+        if (session.state) {
+          Product.findOne({ _id: value}, { _id: 0}).exec((err, products) => {
+            if (err) return res.status(500).json({
+              message: 'Error loading data'
+            });
+            if (!products || products === null) return res.status(404).json({
+              message: 'There are no products to show'
+            });
+            return res.status(200).json({
+              products
+            });
+          });
+        } else {
+          res.status(409).json({
+            message: 'The token has expired'
+          });
+        }
+      });
+  },
 };
+
 module.exports = controller;
