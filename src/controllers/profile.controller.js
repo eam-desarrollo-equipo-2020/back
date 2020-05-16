@@ -104,23 +104,28 @@ var controller = {
         var data = [];
         profiles.forEach(element => {
           let ele = {};
-          users.forEach(element2 => {
-            if (element.id == element2._id && element.id_card == value) {
-              ele = {
-                name: element.name,
-                id_card: element.id_card,
-                phone: element.phone,
-                city: element.city,
-                birth_date: element.birth_date,
-                email: element2.email
-              };
-            } else {
-              return res.status(404).json({
-                message: 'Profile does not exist'
-              });
-            }
-          });
-          data.push(ele);
+          if (element.id_card === value) {
+            users.forEach(element2 => {
+              console.log('Valor '+value);
+              console.log('Valor2 '+element.id_card);
+              if (element.id == element2._id) {
+                ele = {
+                  name: element.name,
+                  id_card: element.id_card,
+                  phone: element.phone,
+                  city: element.city,
+                  birth_date: element.birth_date,
+                  email: element2.email
+                };
+              }
+            });
+            data.push(ele);
+          }
+          if (data[0] == null) {
+            res.status(404).json({
+              message: 'Profile does not exist'
+            });
+          }
         });
         return res.status(200).json({
           data: data
