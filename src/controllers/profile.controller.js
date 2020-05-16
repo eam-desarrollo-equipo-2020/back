@@ -8,7 +8,6 @@ var controller = {
   createProfile: function (req, res) {
     var { name, id_card, phone, city, birth_date } = req.body;
     var { token } = req.headers;
-
     if (name === undefined || id_card === undefined || phone === undefined
       || city === undefined || birth_date === undefined || token === undefined)
       return res.status(409).json({ msg: 'fields are missing' });
@@ -45,6 +44,49 @@ var controller = {
         }
       });
   },
+  
+updateProfile: function(req, res){
+
+  var { name, id_card, phone, city, birth_date } = req.body;
+  var { token } = req.headers;
+
+  if( name === undefined || id_card === undefined || phone === undefined
+      || city === undefined || birth_date === undefined || token === undefined)
+      return res.status(409).json({ msg: 'fields are missing' });
+  
+  if (name === '' || id_card === '' || phone === '' || city === ''
+      || birth_date === '' || token === '')
+      return res.status(409).json({ msg: 'some fields are empty' });
+
+  USER.findOne({access_token: token})
+    .then(session => {
+        if(session.state){
+          Profile.findByIdAndUpdate( req.params.id, {$set: {
+            name: req.body.name,
+            id_card: req.body.id_card,
+            phone: req.body.phone,
+            city: req.body.city,
+            birth_date: req.body.birth_date,
+        }}, { new: true },
+        function( err, profile){
+          if( err )return res.status(500).json({
+            message: 'Error saving profile'
+          });
+          if (!profile) return res.status(400).json({
+            message: 'Could not save profile'
+          });
+          return res.status(200).json({
+            profile: profile
+          });
+        });
+        } else {
+            res.status(409).json({
+                message: 'The token has expired'
+            });
+        }
+    });
+},
+    
 
   listAllProfiles: async (req, res) => {
     const { token } = req.headers;

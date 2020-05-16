@@ -4,13 +4,31 @@ const USER = require('../dao/session.dao.js');
 var controller = {
   createOrder: function (req, res) {
 
+    var { name, client, responsible, total, detail} = req.body;
+    var { token } = req.headers;
+
+    if ( token === undefined || token === '') {
+      return res.status(409).json({ msg: 'Token are missing' });
+    }
+
+    if( name === undefined || client === undefined || responsible === undefined
+      || detail === undefined || total === undefined)
+      return res.status(409).json({ msg: 'fields are missing' });
+  
+  if (name === '' || client === '' || responsible === '' || detail === '' 
+      || total === '')
+      return res.status(409).json({ msg: 'some fields are empty' });
+
     var order = new Order();
-    order.client = req.body.client;
-    order.detail = req.body.detail;   
-    USER.findOne({ access_token: req.headers.token })
+    order.name = name;
+    order.client = client;
+    order.responsible = responsible;
+    order.total = total;
+    order.detail = detail;   
+    USER.findOne({ access_token: token })
       .then(session => {
         if (session.state) {
-          order.id = session.id_user
+          order.id = session.id_user;
           order.save((err, orderStored) => {
             if (err) return res.status(500).json({
               message: 'Error saving order'
