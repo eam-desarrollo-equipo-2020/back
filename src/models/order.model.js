@@ -16,6 +16,10 @@ const orderSchema = new Schema({
     type: String,
     required: true
   },
+  status: {
+    type: Boolean,
+    required: true
+  },
   total: {
     type: Number,
     required: true
@@ -23,7 +27,8 @@ const orderSchema = new Schema({
   detail: [
     {
       'product': String,
-      'cantidad': String
+      'quantity': Number,
+      'price': Number
     }
   ]
   
