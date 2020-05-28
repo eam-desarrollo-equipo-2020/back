@@ -55,3 +55,28 @@ exports.read = async (req, res) => {
 		});
 	}
 };
+
+exports.readById = async (req, res) => {
+	const token = req.headers.token;
+	if (token === undefined) return res.status(409).json({ msg: 'fields are missing' });
+	if (token === '') return res.status(409).json({ msg: 'some fields are empty' });
+	const session = await USER.findOne({ access_token: token });
+
+	if (session && session.state === true) {
+		const id_customer = req.params.id;
+		
+		const customer = await Customer.findById(id_company);
+		
+		if (customer) {
+			res.status(200).json(customer);
+		} else {
+			res.status(404).json({ msg: 'this customer does not exist' });
+		}
+
+	} else {
+		res.status(403).json({
+			msg: 'access denied',
+			causes: 'Token does not exist or has expired'
+		});
+	}
+};
