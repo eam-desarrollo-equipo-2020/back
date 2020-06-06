@@ -13,6 +13,10 @@ const userSchema = new Schema({
 		type: String,
 		required: true,
 		trim: true
+	},
+	active: {
+		type: Boolean,
+		default: true
 	}
 }, {
 	versionKey: false,

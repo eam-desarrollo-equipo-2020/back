@@ -145,3 +145,31 @@ exports.verifySession = async (req, res) => {
 		res.status(401).json({ msg: 'invalid token' });
 	}
 };
+
+exports.delete = async (req, res) => {
+	const token = req.headers.token;
+
+	if (token === undefined) return res.status(409).json({ msg: 'fields are missing' });
+	if (token === '') return res.status(409).json({ msg: 'some fields are empty' });
+
+	const session = await Session.findOne({ access_token: token });
+
+	if (session && session.state === true) {
+		const id_user = req.params.id;
+		
+		const user = await User.findById(id_user);
+
+		if (user) {
+			await user.updateOne({active: false});
+
+			res.status(200).json({ msg: 'user deleted' });
+		} else {
+			res.status(404).json({ msg: 'this user does not exist' });
+		}
+	} else {
+		res.status(403).json({
+			msg: 'access denied',
+			causes: 'Token does not exist or has expired'
+		});
+	}
+};

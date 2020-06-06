@@ -4,4 +4,5 @@ module.exports = (router) => {
 	router.post('/login', Users.loginUser);
 	router.put('/logout', Users.logoutUser);
 	router.get('/verify', Users.verifySession);
+	router.delete('/users/:id', Users.delete);
 }
