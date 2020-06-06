@@ -71,7 +71,7 @@ var controller = {
         causes: 'Token does not exist or has expired'
       });
     }
-  }
+  },
 
   findOrderByClient: async (req, res) => {
     const token = req.headers.token;
