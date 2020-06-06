@@ -73,5 +73,53 @@ var controller = {
       });
     }
   },
+
+  updateOrder: function(req, res){
+
+    var { name, client, responsible, total, status, detail} = req.body;
+    var { token } = req.headers;
+
+    if ( token === undefined || token === '') {
+      return res.status(409).json({ msg: 'Token are missing' });
+    }
+
+    if( name === undefined || client === undefined || responsible === undefined
+      || detail === undefined || total === undefined || status === undefined )
+      return res.status(409).json({ msg: 'fields are missing' });
+  
+  if (name === '' || client === '' || responsible === '' || detail === '' 
+      || total === '' || status === '')
+      return res.status(409).json({ msg: 'some fields are empty' });
+  
+    USER.findOne({access_token: token})
+      .then(session => {
+          if(session.state){
+            Order.findByIdAndUpdate( req.params.id, {$set: {
+              name: req.body.name,
+              client: req.body.client,
+              responsible: req.body.responsible,
+              total: req.body.total,
+              status: req.body.status,
+              detail: req.body.detail,
+          }}, { new: true },
+          function( err, order){
+            if( err )return res.status(500).json({
+              message: 'Error saving order'
+            });
+            if (!order) return res.status(400).json({
+              message: 'Could not save order'
+            });
+            return res.status(200).json({
+              order: order
+            });
+          });
+          } else {
+              res.status(409).json({
+                  message: 'The token has expired'
+              });
+          }
+      });
+  }
+
 };
 module.exports = controller;
