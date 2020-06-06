@@ -145,11 +145,9 @@ updateProfile: function(req, res){
         let users = await User.find();
         var data = [];
         profiles.forEach(element => {
-          let ele = {};
           if (element.id_card === value) {
+            let ele = {};
             users.forEach(element2 => {
-              console.log('Valor '+value);
-              console.log('Valor2 '+element.id_card);
               if (element.id == element2._id) {
                 ele = {
                   name: element.name,
@@ -160,11 +158,11 @@ updateProfile: function(req, res){
                   email: element2.email
                 };
               }
+              data.push(ele);
             });
-            data.push(ele);
           }
-          if (data[0] == null) {
-            res.status(404).json({
+          if (data[0] === '[]') {
+            res.status(400).json({
               message: 'Profile does not exist'
             });
           }

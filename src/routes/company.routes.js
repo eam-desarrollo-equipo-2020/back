@@ -4,4 +4,5 @@ module.exports = (router) => {
 	router.get('/list-companies', Company.listCompanies);
 	router.get('/companies/:id', Company.findCompany);
 	router.get('/company/:name', Company.findCompanyByName);
+	router.put('/company/:id', Company.updateCompany);
 };

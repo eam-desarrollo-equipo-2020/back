@@ -147,21 +147,31 @@ var controller = {
         causes: 'Token does not exist or has expired'
       });
     }
-  }
+  },
 
-  // listCompanies: function (req, res) {
-  //   product.find({}).sort('-razon_social').exec((err, companies) => {
-  //     if (err) return res.status(500).json({
-  //       message: 'Error loading data'
-  //     });
-  //     if (!companies) return res.status(404).json({
-  //       message: 'There are no companies to show'
-  //     });
-  //     return res.status(200).json({
-  //       companies
-  //     });
-  //   });
-  // },
+  updateProduct: async (req, res) => {
+    const token = req.headers.token;
+    if (token === undefined) return res.status(409).json({ msg: 'token are missing' });
+    if (token === '') return res.status(409).json({ msg: 'token field are empty' });
+    const session = await USER.findOne({ access_token: token });
+
+    if (session && session.state === true) {
+      const id_product = req.params.id;
+      var update = req.body;
+
+      const product = await Product.findByIdAndUpdate(id_product, update);
+      if (product) {
+        res.status(200).json(product);
+      } else {
+        res.status(404).json({ msg: 'this product does not exist' });
+      }
+    } else {
+      res.status(403).json({
+        msg: 'access denied',
+        causes: 'Token does not exist or has expired'
+      });
+    }
+  }
 };
 
 module.exports = controller;

@@ -5,4 +5,5 @@ module.exports = (router) => {
 	router.get('/product', Product.listProduct);
 	router.get('/product/:name', Product.findProductByName);
 	router.get('/productCategory/:idProduct', Product.findCategoryByProduct);
+	router.put('/product/:id', Product.updateProduct);
 };
