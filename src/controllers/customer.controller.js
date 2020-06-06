@@ -60,12 +60,12 @@ exports.readById = async (req, res) => {
 	const token = req.headers.token;
 	if (token === undefined) return res.status(409).json({ msg: 'fields are missing' });
 	if (token === '') return res.status(409).json({ msg: 'some fields are empty' });
-	const session = await USER.findOne({ access_token: token });
+	const session = await Session.findOne({ access_token: token });
 
 	if (session && session.state === true) {
 		const id_customer = req.params.id;
 		
-		const customer = await Customer.findById(id_company);
+		const customer = await Customer.findById(id_customer);
 		
 		if (customer) {
 			res.status(200).json(customer);
