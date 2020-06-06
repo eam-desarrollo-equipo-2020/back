@@ -48,6 +48,30 @@ var controller = {
         }
       });
   },
+  findOrderByClient: async (req, res) => {
+    const token = req.headers.token;
+    if (token === undefined) return res.status(409).json({ msg: 'fields are missing' });
+    if (token === '') return res.status(409).json({ msg: 'some fields are empty' });
+    const session = await USER.findOne({ access_token: token });
+
+    if (session && session.state === true) {
+      const name_customer = req.params.name;
+
+      const order = await Order.find({ "client": { '$regex': name_customer } });
+
+      if (order) {
+        res.status(200).json(order);
+      } else {
+        res.status(404).json({ msg: 'Not exist almost a order with this expression' });
+      }
+
+    } else {
+      res.status(403).json({
+        msg: 'access denied',
+        causes: 'Token does not exist or has expired'
+      });
+    }
+  }
 
   findOrderByClient: async (req, res) => {
     const token = req.headers.token;
