@@ -55,3 +55,32 @@ exports.read = async (req, res) => {
 		});
 	}
 };
+
+exports.update = async (req, res) => {
+	const token = req.headers.token;
+	const { name, description } = req.body;
+
+	if (token === undefined || name === undefined || description === undefined)
+		return res.status(409).json({ msg: 'fields are missing' });
+	if (token === '' || name === '' || description === '')
+		return res.status(409).json({ msg: 'some fields are empty' });
+
+	const session = await Session.findOne({ access_token: token });
+
+	if (session && session.state === true) {
+		const id_prodCat = req.params.id;
+		var r_prodCat = { name, description };
+
+		const prodCat_u = await prodCat.findByIdAndUpdate(id_prodCat, r_prodCat);
+		if (prodCat_u) {
+			res.status(200).json(prodCat_u);
+		} else {
+			res.status(404).json({ msg: 'this products category does not exist' });
+		}
+	} else {
+		res.status(403).json({
+			msg: 'access denied',
+			causes: 'Token does not exist or has expired'
+		});
+	}
+};
