@@ -13,7 +13,7 @@ Se actualizan los repositorios `sudo apt update`, se instalan los paquetes `sudo
 
 Se levanta el servicio con el comando 
 
-#sudo service mongod start
+###sudo service mongod start
 
 ## Instalación Node.js
 Se agrega y descarga el repositorio con el comando `sudo curl -sL https://deb.nodesource.com/setup_12.x | bash -` y se instalan los paquetes con `sudo apt install -y nodejs`.
